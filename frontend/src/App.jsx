@@ -61,6 +61,7 @@ function App() {
   if (isSubmitted) {
     return (
       <div>
+        <h2>Successfully shortened!</h2>
         <label>full url</label>
         <input readOnly={true} value={fullUrl} />
         <label>short url</label>

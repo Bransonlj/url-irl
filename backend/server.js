@@ -6,7 +6,7 @@ require('dotenv').config();
 const app = express()
 mongoose.connect(process.env.MONG_URL)
     .then(() => {
-        app.listen(process.env.PORT, () => {
+        app.listen(process.env.PORT || 5000, () => {
             console.log('connected and listening');
         });
     }).catch(err => console.log(err.message))
