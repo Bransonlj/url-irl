@@ -38,24 +38,26 @@ router.post('/', async (req, res) => {
             // stale url, we can replace it
             try {
                 const result = await Urls.replaceOne({ shortURL: url.shortURL }, url);
+                res.status(200).json('success!')
             } catch (error) {
+                // error replacing
                 res.status(400).json(error.message);
             }
     
-            res.status(200).json('success!')
 
         } else {
+            // throw error, url already exists in database
             res.status(400).json('url already exists')
         }
     } else {
+        // does not exist in database yet, can create
         try {
             await Urls.create(url)
-        } catch {
-            res.status(400).json(err.message);
+            res.status(200).json('success!')
+        } catch (error) {
+            res.status(400).json(error.message);
         }
-
-        res.status(200).json('success!')
-
+        
     }
 
 })

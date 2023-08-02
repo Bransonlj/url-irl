@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
+import styles from './Redirect.module.scss'
 
 export default function Redirect() {
 
@@ -57,17 +58,23 @@ export default function Redirect() {
 
     if (error) {
         return (
-            <div>
+            <div className={styles.mainContainer}>
                 <h2>Error</h2>
                 <p>{ error }</p>
+                <Link to={"/"}>Return home</Link>
             </div>
         )
     }
     
     return (
-        <div>
-            <label>Redirecting you to {fullUrl} in {5 - countdown} </label>
-            <Link to={ fullUrl }>navigate manually</Link>
+        <div className={styles.mainContainer}>
+            <label>Redirecting you to {fullUrl} in {5 - countdown}... </label>
+            <div>
+                <label>Click </label>
+                <Link to={ fullUrl }>here</Link>
+                <label> to navigate manually</label>
+            </div>
+            <Link to={ "/" }>Return to safety</Link>
         </div>
     )
 }

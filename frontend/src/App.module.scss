@@ -1,0 +1,73 @@
+@use "./styles/colours.scss";
+
+.mainContainer {
+    background-color: colours.$blue;
+    border: 3px solid colours.$dark-green;
+    border-radius: 20px;
+    padding: 20px;
+
+    h2 {
+        margin: 5px;
+    }
+
+    input {
+        font-size: 0.8em;
+        background-color: colours.$white;
+        border: 2px solid colours.$black;
+        padding: 5px;
+        border-radius: 8px;
+        &:focus{
+            outline: none;
+        }
+    }
+
+    button {
+        width: fit-content;
+        color: colours.$white;
+        background-color: colours.$green;
+        border: 2px solid colours.$black;
+        padding: 5px;
+        border-radius: 8px;
+
+        &:hover {
+            background-color: colours.$light-green;
+            cursor: pointer;
+        }
+    }
+}
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.shortUrl {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 3px;
+
+
+}
+
+.baseUrl {
+    width: fit-content;
+}
+
+.row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 3px;
+
+    input {
+        flex: 1 0 auto
+    }
+}
+
+.error {
+    color: rgb(202, 50, 50);
+    font-size: 0.7em;
+}

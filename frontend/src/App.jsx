@@ -1,37 +1,43 @@
 import { useState } from 'react'
-import './App.css'
+import styles from './App.module.scss'
 import { isValidShortUrl, isValidUrl, parseUrl } from './utils/urls';
 
 function App() {
 
   const [fullUrl, setFullUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
-  const [error, setError] = useState("");
+  const [errorServer, setErrorServer] = useState("");
+  const [errorLongUrl, setErrorLongUrl] = useState(false)
+  const [errorShortUrl, setErrorShortUrl] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   function resetPage() {
     setFullUrl("");
     setShortUrl("");
-    setError("");
+    setErrorServer("");
+    setErrorLongUrl(false)
+    setErrorShortUrl(false)
     setIsSubmitted(false);
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
     const parsedUrl = parseUrl(fullUrl);
-    setError("");
+    setErrorServer("");
+    setErrorLongUrl(false)
+    setErrorShortUrl(false)
     const body = {
       url: parsedUrl,
       shortURL: shortUrl,
     }
 
     if (!isValidUrl(parsedUrl)) {
-      setError("Invalid Url");
+      setErrorLongUrl(true)
       return 
     }
 
     if (!isValidShortUrl(shortUrl)) {
-      setError("Invalid ShortUrl");
+      setErrorShortUrl(true)
       return 
     }
 
@@ -50,37 +56,58 @@ function App() {
         setIsSubmitted(true);
 
       } else {
-        throw new Error("unsuccessful")
+        const result = await response.json()
+        throw new Error(result)
       }
     } catch (error) {
-      setError(error.message);
+      setErrorServer(error.message);
     }
     
   }
   
   if (isSubmitted) {
     return (
-      <div>
-        <h2>Successfully shortened!</h2>
-        <label>full url</label>
-        <input readOnly={true} value={fullUrl} />
-        <label>short url</label>
-        <input readOnly={true} value={shortUrl} />
-        <button type='button' onClick={() => resetPage()}>Shorten Another</button>
+      <div className={styles.mainContainer}>
+        <div className={styles.formContainer}>
+          <h2>Shortened Successfully!</h2>
+
+            <label>Full URL:</label>
+            <div className={styles.row}>
+              <input readOnly={true} value={fullUrl} />
+              <button onClick={() => navigator.clipboard.writeText(fullUrl)}>Copy</button>
+            </div>
+
+            <label>Custom Link:</label>
+            <div className={styles.row}>
+              <input readOnly={true} value={shortUrl} />
+              <button onClick={() => navigator.clipboard.writeText(shortUrl)}>Copy</button>
+            </div>
+
+          <button type='button' onClick={() => resetPage()}>Shorten Another</button>
+        </div>
       </div>
     )
   }
 
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>full url</label>
-        <input value={fullUrl} onChange={(e) => setFullUrl(e.target.value)}/>
-        <label>short url</label>
-        <input value={shortUrl} onChange={(e) => setShortUrl(e.target.value)}/>
-        <button type='submit'>shorten!</button>
-        {error && <label>{ error }</label>}
+    <div className={styles.mainContainer}>
+      <form onSubmit={handleSubmit} className={styles.formContainer}>
+
+        <label>Full URL:</label>
+        <input placeholder='Enter full url here' value={fullUrl} onChange={(e) => setFullUrl(e.target.value)}/>
+        {errorLongUrl && <label className={styles.error}>Invalid URL</label>}
+        <label>Custom Link:</label>
+
+        <div className={styles.shortUrl}>
+          <input readOnly={true} value={window.location.href.split("?")[0]} className={styles.baseUrl}></input>
+          <input placeholder='Enter link' value={shortUrl} onChange={(e) => setShortUrl(e.target.value)}/>
+        </div>
+        {errorShortUrl && <label className={styles.error}>Invalid Link</label>}
+        <div className={styles.row}>
+          <button type='submit'>shorten!</button>
+          {errorServer && <label className={styles.error}>{ errorServer }</label>}
+        </div>
       </form>
     </div>
   )

@@ -1,5 +1,4 @@
 export function parseUrl(url) {
-    console.log(url)
     if (url.includes(":")) {
         return url
     } else {
@@ -20,6 +19,11 @@ export function isValidUrl(url) {
     }
 }
 
-export function isValidShortUrl() {
-    return true;
+export function isValidShortUrl(url) {
+    // cannot must not be empty and must not contain whitespaces or "."
+    return !(
+        url.length === 0
+        || url.includes(" ") 
+        || url.includes(".")
+    );
 }
